@@ -1,0 +1,61 @@
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+Loading weights:   0%|          | 0/311 [00:00<?, ?it/s]Loading weights:   0%|          | 1/311 [00:00<00:53,  5.84it/s]Loading weights:  69%|██████▉   | 214/311 [00:00<00:00, 964.40it/s]Loading weights: 100%|██████████| 311/311 [00:00<00:00, 951.89it/s]
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/goinfre/mmouis/RagV3/src/__main__.py", line 223, in <module>
+    fire.Fire(RAGPipeline)
+    ~~~~~~~~~^^^^^^^^^^^^^
+  File "/goinfre/mmouis/RagV3/.venv/lib/python3.13/site-packages/fire/core.py", line 135, in Fire
+    component_trace = _Fire(component, args, parsed_flag_args, context, name)
+  File "/goinfre/mmouis/RagV3/.venv/lib/python3.13/site-packages/fire/core.py", line 468, in _Fire
+    component, remaining_args = _CallAndUpdateTrace(
+                                ~~~~~~~~~~~~~~~~~~~^
+        component,
+        ^^^^^^^^^^
+    ...<2 lines>...
+        treatment='class' if is_class else 'routine',
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        target=component.__name__)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/goinfre/mmouis/RagV3/.venv/lib/python3.13/site-packages/fire/core.py", line 684, in _CallAndUpdateTrace
+    component = fn(*varargs, **kwargs)
+  File "/goinfre/mmouis/RagV3/src/__main__.py", line 134, in answer
+    answer_text = generator.generate_answer(query, results)
+  File "/goinfre/mmouis/RagV3/src/generator.py", line 80, in generate_answer
+    generated_ids = self.model.generate(
+        model_inputs.input_ids,
+    ...<4 lines>...
+        pad_token_id=self.tokenizer.pad_token_id      # ✅ Fix: use dedicated pad_token_id
+    )
+  File "/goinfre/mmouis/RagV3/.venv/lib/python3.13/site-packages/torch/utils/_contextlib.py", line 124, in decorate_context
+    return func(*args, **kwargs)
+  File "/goinfre/mmouis/RagV3/.venv/lib/python3.13/site-packages/transformers/generation/utils.py", line 2584, in generate
+    result = decoding_method(
+        self,
+    ...<5 lines>...
+        **model_kwargs,
+    )
+  File "/goinfre/mmouis/RagV3/.venv/lib/python3.13/site-packages/transformers/generation/utils.py", line 2798, in _sample
+    outputs = model_forward(**model_inputs, return_dict=True)
+  File "/goinfre/mmouis/RagV3/.venv/lib/python3.13/site-packages/torch/nn/modules/module.py", line 1778, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/goinfre/mmouis/RagV3/.venv/lib/python3.13/site-packages/torch/nn/modules/module.py", line 1789, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/goinfre/mmouis/RagV3/.venv/lib/python3.13/site-packages/transformers/utils/generic.py", line 907, in wrapper
+    output = func(self, *args, **kwargs)
+  File "/goinfre/mmouis/RagV3/.venv/lib/python3.13/site-packages/transformers/models/qwen3/modeling_qwen3.py", line 505, in forward
+    logits = self.lm_head(hidden_states[:, slice_indices, :])
+  File "/goinfre/mmouis/RagV3/.venv/lib/python3.13/site-packages/torch/nn/modules/module.py", line 1778, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/goinfre/mmouis/RagV3/.venv/lib/python3.13/site-packages/torch/nn/modules/module.py", line 1789, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/goinfre/mmouis/RagV3/.venv/lib/python3.13/site-packages/torch/nn/modules/linear.py", line 134, in forward
+    return F.linear(input, self.weight, self.bias)
+           ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+KeyboardInterrupt
+Exception ignored on flushing sys.stdout:
+BrokenPipeError: [Errno 32] Broken pipe

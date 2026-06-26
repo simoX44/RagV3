@@ -1,0 +1,26 @@
+Searching for context...
+Loading Qwen/Qwen3-0.6B on cpu (This might take a minute the first time)...
+
+Generating answer...
+========================================
+Retrieved 10 chunks.
+Chunk 0: data/raw/vllm-0.10.1/docs/models/supported_models.md
+Chunk 1: data/raw/vllm-0.10.1/docs/models/hardware_supported_models/tpu.md
+Chunk 2: data/raw/vllm-0.10.1/docs/models/pooling_models.md
+Chunk 3: data/raw/vllm-0.10.1/docs/models/pooling_models.md
+Chunk 4: data/raw/vllm-0.10.1/docs/models/hardware_supported_models/tpu.md
+Chunk 5: data/raw/vllm-0.10.1/.buildkite/nightly-benchmarks/nightly-descriptions.md
+Chunk 6: data/raw/vllm-0.10.1/tests/system_messages/sonnet3.5_nov2024.txt
+Chunk 7: data/raw/vllm-0.10.1/docs/getting_started/installation/cpu.md
+Chunk 8: data/raw/vllm-0.10.1/docs/models/supported_models.md
+Chunk 9: data/raw/vllm-0.10.1/docs/usage/reproducibility.md
+vLLM supports a variety of models, including:
+
+- **vLLM** (the model executor)
+- **Transformers** (for decoder language models and common vision language models)
+- **Vision-language models** (which currently only accept image inputs)
+- **Pooler models** (which support tasks like encoding, embedding, classification, and scoring)
+- **Hardware-supported models** (such as Qwen/Qwen2.5-14B-Instruct and Qwen/Qwen2.5-1.5B-Instruct)
+- **Matryoshka Embeddings** (for training embedding models)
+
+These models are available in the vLLM documentation and are supported in the context provided.

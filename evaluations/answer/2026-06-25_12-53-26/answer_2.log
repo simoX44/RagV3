@@ -1,0 +1,21 @@
+Searching for context...
+Loading Qwen/Qwen3-0.6B on cpu (This might take a minute the first time)...
+
+Generating answer...
+========================================
+Retrieved 10 chunks.
+Chunk 0: data/raw/vllm-0.10.1/docs/usage/troubleshooting.md
+Chunk 1: data/raw/vllm-0.10.1/docs/usage/troubleshooting.md
+Chunk 2: data/raw/vllm-0.10.1/docs/serving/distributed_troubleshooting.md
+Chunk 3: data/raw/vllm-0.10.1/docs/usage/troubleshooting.md
+Chunk 4: data/raw/vllm-0.10.1/docs/usage/troubleshooting.md
+Chunk 5: data/raw/vllm-0.10.1/docs/serving/distributed_troubleshooting.md
+Chunk 6: data/raw/vllm-0.10.1/docs/serving/distributed_troubleshooting.md
+Chunk 7: data/raw/vllm-0.10.1/docs/serving/distributed_troubleshooting.md
+Chunk 8: data/raw/vllm-0.10.1/docs/usage/troubleshooting.md
+Chunk 9: data/raw/vllm-0.10.1/docs/serving/parallelism_scaling.md
+The NCCL error "unhandled system error" during
+`ncclCommInitRank` in vLLM distributed serving is caused by a missing
+`IPC_LOCK` Linux capability or an unmounted `/dev/shm`.
+This issue can be resolved by ensuring that the environment has the necessary
+permissions and that the shared storage is properly mounted.

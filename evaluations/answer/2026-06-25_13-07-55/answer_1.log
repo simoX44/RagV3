@@ -1,0 +1,17 @@
+Searching for context...
+Loading Qwen/Qwen3-0.6B on cpu (This might take a minute the first time)...
+
+Generating answer...
+========================================
+Retrieved 10 chunks.
+Chunk 0: data/raw/vllm-0.10.1/docs/README.md
+Chunk 1: data/raw/vllm-0.10.1/docs/design/paged_attention.md
+Chunk 2: data/raw/vllm-0.10.1/README.md
+Chunk 3: data/raw/vllm-0.10.1/README.md
+Chunk 4: data/raw/vllm-0.10.1/docs/README.md
+Chunk 5: data/raw/vllm-0.10.1/benchmarks/README.md
+Chunk 6: data/raw/vllm-0.10.1/tests/prompts/summary.txt
+Chunk 7: data/raw/vllm-0.10.1/docs/serving/openai_compatible_server.md
+Chunk 8: data/raw/vllm-0.10.1/benchmarks/sonnet.txt
+Chunk 9: data/raw/vllm-0.10.1/docs/contributing/README.md
+PagedAttention is a technique used in vLLM to efficiently manage memory during large language model serving. It allows the model to break down the input into smaller segments (paged blocks) and handle each block independently, reducing memory usage and improving performance.
