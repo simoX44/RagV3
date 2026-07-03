@@ -1,4 +1,0 @@
-TEST_1 (Empty query): PASS
-TEST_2 (Gibberish query): PASS
-TEST_3 (k=0 answer): PASS
-TEST_4 (Nonexistent dataset path): PASS

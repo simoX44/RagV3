@@ -8,7 +8,8 @@ from src.chunking import retrieve_files
 from src.indexing import build_and_save_index, load_index, search_bm25
 from src.models import (
     RagDataset, MinimalSearchResults, MinimalSource,
-    StudentSearchResults, MinimalAnswer, StudentSearchResultsAndAnswer
+    StudentSearchResults, MinimalAnswer, StudentSearchResultsAndAnswer, 
+    is_valid_inp
 )
 from src.evaluation import evaluate_results
 from typing import Any
@@ -20,6 +21,10 @@ class RAGPipeline:
 
     def index(self, max_chunk_size: int = 2000, repo_root: str = "data/raw/vllm-0.10.1") -> None:
         """Index the repository files into structured chunk units."""
+        if is_valid_inp("valid", max_chunk_size) is False:
+            print(
+                f"Error: max_chunk_size must be a positive integer.", file=sys.stderr)
+            return
         try:
             print(f"Starting indexing for {repo_root} with chunk size {max_chunk_size}...")
             chunks: Any = retrieve_files(repo_root, max_chunk_size)
@@ -33,7 +38,17 @@ class RAGPipeline:
 
     def search(self, query: str, k: int = 10) -> None:
         """Search both indexes for a single query."""
+        
+        if is_valid_inp(query, k) is False:
+            print(
+                f"Error: Invalid input. Query must be a non-empty string and"
+                    f"k must be a positive integer.", file=sys.stderr)
+            return
+
         try:
+            if len(query.strip()) == 0:
+                print("Error: Query string is empty. Please provide a valid question.", file=sys.stderr)
+                return
             bm25_docs, chunks_docs, bm25_code, chunks_code = load_index("all")
             docs_results = search_bm25(bm25_docs, chunks_docs, query, k)
             code_results = search_bm25(bm25_code, chunks_code, query, k)
@@ -50,6 +65,10 @@ class RAGPipeline:
 
     def search_dataset(self, dataset_path: str, k: int = 10, save_directory: str = "data/output/search_results") -> None:
         """Process multiple batch questions from a JSON dataset."""
+        if is_valid_inp("valid", k) is False:
+            print(
+                f"Error: k must be a positive integer.", file=sys.stderr)
+            return
         try:
             if "docs" in dataset_path:
                 index_type = "docs"
@@ -117,7 +136,16 @@ class RAGPipeline:
 
     def answer(self, query: str, k: int = 10) -> None:
         """Answer a single question using both indexes."""
+        
+        if is_valid_inp(query, k) is False:
+            print(
+                f"Error: Invalid input. Query must be a non-empty string and"
+                    f"k must be a positive integer.", file=sys.stderr)
+            return
         try:
+            if len(query.strip()) == 0:
+                print("Error: Query string is empty. Please provide a valid question.", file=sys.stderr)
+                return
             from src.generator import RAGGenerator  # lazy import — avoids torch on index/search
             bm25_docs, chunks_docs, bm25_code, chunks_code = load_index("all")
             print("Searching for context...")

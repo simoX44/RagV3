@@ -1,6 +1,17 @@
-from typing import List
+from typing import List, Any
 from pydantic import BaseModel, Field, AliasChoices
 import uuid
+
+
+def is_valid_inp(query: Any, k: int) -> bool:
+
+    if not isinstance(query, str):
+        return False
+    if not query.strip():
+        return False
+    if not isinstance(k, int) or k <= 0:
+        return False
+    return True
 
 class MinimalSource(BaseModel):
     file_path: str

@@ -12,11 +12,6 @@ class RAGGenerator:
 
         self.tokenizer = AutoTokenizer.from_pretrained(self.model_name)
         
-        # Just set pad_token = eos_token, and explicitly pass attention_mask
-        if self.tokenizer.pad_token is None:
-            self.tokenizer.pad_token = self.tokenizer.eos_token
-            self.tokenizer.pad_token_id = self.tokenizer.eos_token_id
-
         # Load model efficiently
         self.model = AutoModelForCausalLM.from_pretrained(
             self.model_name,
@@ -45,7 +40,12 @@ class RAGGenerator:
                 "role": "system",
                 "content": (
                     "You are a helpful coding assistant. "
-                    "Answer the user's question based strictly on the provided context. "
+                    "Answer the user's question based ONLY on the provided context. "
+                    "If the context does not contain enough information to answer "
+                    "the question, respond with exactly: "
+                    "'I don't have enough information in the provided context to answer this question.' "
+                    "Do NOT use your training knowledge to fill gaps. "
+                    "Do NOT guess or infer beyond what is explicitly stated in the context. "
                     "Keep your answer clear, self-contained, and faithful to the source."
                 )
             },
@@ -73,7 +73,6 @@ class RAGGenerator:
         model_inputs = self.tokenizer(
             [text],
             return_tensors="pt",
-            padding=True,
             truncation=True
         ).to(self.device)
 
@@ -82,8 +81,7 @@ class RAGGenerator:
             attention_mask=model_inputs.attention_mask,   # ✅ Fix: pass attention_mask
             max_new_tokens=max_new_tokens,
             temperature=0.3,
-            do_sample=True,
-            pad_token_id=self.tokenizer.pad_token_id      # ✅ Fix: use dedicated pad_token_id
+            do_sample=False,
         )
 
         generated_ids = [
