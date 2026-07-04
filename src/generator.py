@@ -5,25 +5,29 @@ from src.chunking import Chunk
 
 
 class RAGGenerator:
-    def __init__(self, model_name: str = "Qwen/Qwen3-0.6B"):
+    def __init__(self, model_name: str = "Qwen/Qwen3-0.6B") -> None:
         self.model_name = model_name
         self.device = "cuda" if torch.cuda.is_available() else "cpu"
-        print(f"Loading {self.model_name} on {self.device} (This might take a minute the first time)...")
+        print(
+            f"Loading {self.model_name} on {self.device} (This might take a minute the first time)..."
+        )
 
         self.tokenizer = AutoTokenizer.from_pretrained(self.model_name)
-        
+
         # Load model efficiently
         self.model = AutoModelForCausalLM.from_pretrained(
             self.model_name,
-            torch_dtype=torch.float16 if torch.cuda.is_available() else torch.float32,
-            device_map="auto" if torch.cuda.is_available() else None,
-            low_cpu_mem_usage=True
+            torch_dtype=(torch.float16 if torch.cuda.is_available() else torch.float32),
+            device_map=("auto" if torch.cuda.is_available() else None),
+            low_cpu_mem_usage=True,
         )
 
-
-    def generate_answer(self, question: str, retrieved_chunks: List[Chunk], max_new_tokens: int = 512) -> str:
+    def generate_answer(
+        self, question: str, retrieved_chunks: List[Chunk], max_new_tokens: int = 512
+    ) -> str:
+        """Generate an answer given a question and retrieved context chunks."""
         # Combine chunks into context, but limit it to avoid running out of memory/tokens
-        context_parts = []
+        context_parts: List[str] = []
         current_len = 0
 
         for c in retrieved_chunks:
@@ -47,7 +51,7 @@ class RAGGenerator:
                     "Do NOT use your training knowledge to fill gaps. "
                     "Do NOT guess or infer beyond what is explicitly stated in the context. "
                     "Keep your answer clear, self-contained, and faithful to the source."
-                )
+                ),
             },
             {
                 "role": "user",
@@ -57,8 +61,8 @@ class RAGGenerator:
                     f"{context_text}\n"
                     f"---------------------\n"
                     f"Given the context information, answer the following question: {question}"
-                )
-            }
+                ),
+            },
         ]
 
         # Qwen uses chat templates
@@ -66,28 +70,27 @@ class RAGGenerator:
             messages,
             tokenize=False,
             add_generation_prompt=True,
-            enable_thinking=False  # Disable "thinking..." to save tokens and avoid confusion
+            enable_thinking=False,
         )
 
-        # Fix: pass padding=True so attention_mask is generated
-        model_inputs = self.tokenizer(
-            [text],
-            return_tensors="pt",
-            truncation=True
-        ).to(self.device)
+        # Ensure attention mask is returned and tensors are moved to the correct device
+        tokenized = self.tokenizer([
+            text,
+        ], return_tensors="pt", truncation=True, padding=True)
 
-        generated_ids = self.model.generate(
-            model_inputs.input_ids,
-            attention_mask=model_inputs.attention_mask,   # ✅ Fix: pass attention_mask
+        model_inputs = {name: tensor.to(self.device) for name, tensor in tokenized.items()}
+
+        generated = self.model.generate(
+            input_ids=model_inputs["input_ids"],
+            attention_mask=model_inputs.get("attention_mask"),
             max_new_tokens=max_new_tokens,
             temperature=0.3,
             do_sample=False,
         )
 
-        generated_ids = [
-            output_ids[len(input_ids):]
-            for input_ids, output_ids in zip(model_inputs.input_ids, generated_ids)
-        ]
+        # Trim the prompt tokens from the outputs
+        input_len = model_inputs["input_ids"].shape[1]
+        generated_ids = [output[input_len:].tolist() for output in generated]
 
         response = self.tokenizer.batch_decode(generated_ids, skip_special_tokens=True)[0]
         return response.strip()
