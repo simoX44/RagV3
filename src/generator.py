@@ -138,9 +138,9 @@ class RAGGenerator:
 
         # Trim the prompt tokens from the outputs
         input_len = model_inputs["input_ids"].shape[1]
-        generated_ids = [output[input_len:].tolist() for output in generated]
+        generated_ids = generated[0][input_len:].tolist()
 
-        response: str = self.tokenizer.batch_decode(
+        response: str = self.tokenizer.decode(
             generated_ids, skip_special_tokens=True
-        )[0]
+        )
         return response.strip()
