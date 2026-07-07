@@ -2,39 +2,39 @@ install:
 	uv sync
 
 run:
-	uv run -m src search_dataset \
+	@ uv run -m student search_dataset \
 		--dataset_path data/datasets/UnansweredQuestions/dataset_docs_public.json \
 		--k 10 \
 		--save_directory data/output/search_results
 
-	uv run -m src search_dataset \
+	@ uv run -m student search_dataset \
 		--dataset_path data/datasets/UnansweredQuestions/dataset_code_public.json \
 		--k 10 \
 		--save_directory data/output/search_results
 
 index:
-	uv run -m src index
+	@ uv run -m student index
 
 
 
 
 eval:
-	uv run -m src evaluate \
+	@ uv run -m student evaluate \
 	  --student_answer_path data/output/search_results/dataset_docs_public.json \
 	  --dataset_path data/datasets/AnsweredQuestions/dataset_docs_public.json
 
 	# Evaluate code
-	uv run -m src evaluate \
+	@ uv run -m student evaluate \
 	  --student_answer_path data/output/search_results/dataset_code_public.json \
 	  --dataset_path data/datasets/AnsweredQuestions/dataset_code_public.json	
 
 
 debug:
-	uv run -m pdb -m src search_dataset \
+	@ uv run -m pdb -m student search_dataset \
 		--dataset_path data/datasets/UnansweredQuestions/dataset_docs_public.json \
 		--k 10 \
 		--save_directory data/output/search_results
-	uv run -m pdb -m src search_dataset \
+	@ uv run -m pdb -m student search_dataset \
 		--dataset_path data/datasets/UnansweredQuestions/dataset_code_public.json \
 		--k 10 \
 		--save_directory data/output/search_results
@@ -52,8 +52,8 @@ fclean:
 
 
 lint:
-	flake8 src
-	mypy src \
+	flake8 student 
+	mypy student \
 		--warn-return-any \
 		--warn-unused-ignores \
 		--ignore-missing-imports \
